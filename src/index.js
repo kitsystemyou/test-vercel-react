@@ -27,7 +27,7 @@ class Board extends React.Component {
     handleClick(i) {
         const squares = this.state.squares.slice();
         // 勝敗決定 or 既に値がある場合早期 return
-        if (calculateWinner(squares) || squares[i]) {
+        if (calculateWinner(squares) || squares[i] || calculateEnd(squares)) {
             return;
         }
         squares[i] = this.state.xIsNext ? this.prefer : this.defer;
@@ -48,9 +48,12 @@ class Board extends React.Component {
 
     render() {
         const winner = calculateWinner(this.state.squares);
+        const fill = calculateEnd(this.state.squares);
         let status;
         if (winner) {
             status = 'Winner: ' + winner
+        } else if (fill) {
+            status = 'End of the game!'
         } else {
             status = 'Next Player:' + (this.state.xIsNext ? this.prefer : this.defer);
         }
@@ -114,6 +117,17 @@ function calculateWinner(squares) {
         }
     }
     return null;
+}
+
+function calculateEnd(squares) {
+    let fill = true;
+    for (let i = 0; i < squares.length; i++) {
+        if (!squares[i]) {
+            fill = false
+            break
+        }
+    }
+    return fill
 }
 
 
